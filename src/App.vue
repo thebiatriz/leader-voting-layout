@@ -1,6 +1,6 @@
 <template>
   <Toast />
-    <router-view />
+  <div class="p-5"><router-view /></div>
 </template>
 
 <script lang="ts">
