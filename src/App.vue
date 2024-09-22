@@ -1,6 +1,8 @@
 <template>
   <Toast />
-  <div class="p-5"><router-view /></div>
+  <div class="p-5 pt-32">
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">

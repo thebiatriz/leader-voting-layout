@@ -15,6 +15,8 @@ import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import DataView from "primevue/dataview";
 import Dialog from "primevue/dialog";
+import InputMask from "primevue/inputmask";
+import Slider from "primevue/slider";
 
 import { App } from "vue";
 
@@ -36,6 +38,8 @@ export function setPrimeVueComponents(app: App) {
     app.component("IconField", IconField)
     app.component("DataView", DataView)
     app.component("Dialog", Dialog)
+    app.component("InputMask", InputMask)
+    app.component("Slider", Slider)
 
 
 }

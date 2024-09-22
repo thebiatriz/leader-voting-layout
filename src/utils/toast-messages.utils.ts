@@ -1,3 +1,4 @@
 export enum MessageToasts {
-    SUCCESS_CREATE_LEADER = "Candidato para líder cadastrado",
+    SUCCESS_CREATE_LEADER = "Candidato para líder cadastrado.",
+    SUCCESS_VOTE_LEADER = "Você votou na \"Beatriz\" para líder.",
 }
