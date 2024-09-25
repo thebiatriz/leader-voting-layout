@@ -13,7 +13,7 @@
                                 maxlength="50" placeholder="Nome do candidato"></InputText>
                             <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm"
                                 placeholder="Número escolhido para o candidato"></InputText>
-                            <InputMask v-model="candidateMatricula" required class="w-1/4 mr-2 !text-sm"
+                            <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
                                 placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
                             <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
                                 placeholder="Escolha a turma" aria-required="true" class="!text-sm"></Select>
@@ -56,13 +56,16 @@
                                     <span class="text-sm pb-2">Número: 08 </span>
                                     <span class="text-sm pb-2">Matrícula: 1-2024123456 </span>
                                 </div>
-                                <div class="flex justify-end">
+
+                                <div class="flex justify-between pt-9">
+                                    <span class="pt-4 flex justify-end">Quantidade de votos: 25 votos</span>
                                     <Button @click="toastVote" label="VOTAR" class="w-1/4" severity="contrast"></Button>
                                 </div>
-                                <span class="pt-4 flex justify-end">Quantidade de votos: 25 votos</span>
                             </template>
                         </Card>
-                        <Paginator></Paginator>
+                        <Paginator :rows="3" :total-records="3"
+                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink">
+                        </Paginator>
                     </div>
                 </template>
             </Card>
@@ -81,7 +84,7 @@ export default defineComponent({
         return {
             candidateName: '' as string,
             candidateNumber: '' as string,
-            candidateMatricula: '' as string,
+            candidateRegistry: '' as string,
             selectedClass: null as string | null,
             availablesClasses: [
                 { name: 'Fundamentos de Análise' },
@@ -98,7 +101,7 @@ export default defineComponent({
     },
     computed: {
         isFormValid(): boolean {
-            return this.candidateName !== '' && this.candidateNumber !== '' && this.candidateMatricula !== '' && this.selectedClass !== null;
+            return this.candidateName !== '' && this.candidateNumber !== '' && this.candidateRegistry !== '' && this.selectedClass !== null;
         },
         registryButtonClass(): string {
             return this.isFormValid
@@ -131,5 +134,18 @@ export default defineComponent({
 <style scoped>
 .playwrite-font {
     font-family: 'Playwrite_DE_Grund', sans-serif;
+}
+
+::v-deep .p-slider .p-slider-range {
+    background-color: black !important;
+}
+
+::v-deep .p-slider .p-slider-handle {
+    background-color: black !important;
+}
+
+::v-deep .p-slider .p-slider-handle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px gray !important;
 }
 </style>

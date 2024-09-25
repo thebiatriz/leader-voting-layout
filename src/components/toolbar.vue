@@ -1,29 +1,121 @@
 <template>
     <div class="fixed top-0 w-full z-50">
         <Toolbar
-            class="!border-[#8e96db] !bg-[#a1a7f5] !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
+            class="!border-black !bg-black !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
             <template #start>
                 <div class="flex items-center space-x-4">
                     <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe</span>
                 </div>
             </template>
             <template #end>
-                <div class="hidden md:flex items-center space-x-4">
-                    <Button icon="pi pi-user" severity="secondary" class="!rounded-full" />
+                <div class="flex items-center space-x-4">
+                    <Button @click="showToggleOptions($event)" icon="pi pi-user" severity="secondary" type="button"
+                        class="!rounded-full" />
+                    <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true"></Menu>
                 </div>
             </template>
         </Toolbar>
+
+        <Dialog v-model:visible="visibleEditDialog" modal class="w-1/2">
+            <template #header>
+                <span class="text-2xl font-semibold">Editar candidato</span>
+            </template>
+            <span>Preencha os dados abaixo para a mudança</span>
+            <div class="py-4 flex justify-center">
+                <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3" maxlength="50"
+                    placeholder="Senhora Lalá"></InputText>
+                <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm"
+                    placeholder="09"></InputText>
+                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
+                    placeholder="1-2024155074" mask="9-9999999999"></InputMask>
+                <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
+                    placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm"></Select>
+            </div>
+            <div class="pt-2 flex justify-end gap-6">
+                <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
+                    @click="visibleDeleteDialog = false" />
+                <Button @click="toastEditCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4"/>
+            </div>
+        </Dialog>
+
+        <Dialog v-model:visible="visibleDeleteDialog" modal class="w-1/3">
+            <template #header>
+                <span class="text-2xl font-semibold">Deletar candidato</span>
+            </template>
+            <span>Você confirma em deletar o cadastro a Líder "Seu nome"?</span>
+            <div class="pt-8 flex justify-end gap-6">
+                <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
+                    @click="visibleDeleteDialog = false" />
+                <Button @click="toastDeleteCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4"/>
+            </div>
+        </Dialog>
+
+        
+
     </div>
 </template>
 
 <script lang="ts">
+import { MessageToasts } from '@/utils/toast-messages.utils';
+import { ToastService } from '@/utils/toast-service.utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'toolbar',
     data() {
         return {
-
+            candidateName: '' as string,
+            candidateNumber: '' as string,
+            candidateRegistry: '' as string,
+            selectedClass: null as string | null,
+            availablesClasses: [
+                { name: 'Fundamentos de Análise' },
+                { name: 'Gerenciamento de TI' },
+                { name: 'Interface Homem Máquina' },
+                { name: 'Projeto de Extensão - REDES' },
+                { name: 'Redes de Computadores' },
+                { name: 'Sistemas Operacionais' }
+            ] as Array<{ name: string }>,
+            voteQuantity: 50 as number,
+            voteQuantityString: '50',
+            visibleDeleteDialog: false,
+            visibleEditDialog: false,
+            toggleOptions: [
+                {
+                    label: "Editar Candidato",
+                    icon: "pi pi-pencil",
+                    command: () => {
+                        this.openEditDialog(this.visibleDeleteDialog);
+                    }
+                },
+                {
+                    label: "Deletar Candidato",
+                    icon: "pi pi-trash",
+                    command: () => {
+                        this.openDeleteDialog(this.visibleDeleteDialog);
+                    }
+                }
+            ]
+        }
+    },
+    methods: {
+        showToggleOptions(event: Event): void {
+            const ref = this.$refs.menuPopUp as any;
+            ref.toggle(event);
+        },
+        openDeleteDialog(isVisible: boolean): void {
+            isVisible ? this.visibleDeleteDialog = false : this.visibleDeleteDialog = true;
+        },
+        openEditDialog(isVisible: boolean): void {
+            isVisible ? this.visibleEditDialog = false : this.visibleEditDialog = true;
+        },
+        toastDeleteCandidate(): void {
+            this.visibleDeleteDialog = false;
+            this.$toast.add(ToastService.success(MessageToasts.SUCCESS_DELETE_LEADER));
+        },
+        toastEditCandidate(): void {
+            this.visibleEditDialog = false;
+            this.$toast.add(ToastService.success(MessageToasts.SUCCESS_EDIT_LEADER));
         }
     }
 })
