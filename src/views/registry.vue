@@ -1,6 +1,6 @@
 <template>
-    <main class="playwrite-font w-full">
-        <h1 class="text-xl font-bold flex justify-center playwrite-font">BEM VINDO A VOTAÇÃO</h1>
+    <main class="font-playwrite w-full">
+        <h1 class="text-xl font-bold flex justify-center">BEM-VINDO A VOTAÇÃO</h1>
         <div class="flex flex-col justify-center items-center">
             <Card class="mt-5 border w-11/12 md:w-9/12">
                 <template #title>
@@ -16,17 +16,18 @@
                             <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
                                 placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
                             <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
-                                placeholder="Escolha a turma" aria-required="true" class="!text-sm"></Select>
+                                placeholder="Escolha a turma" aria-required="true"
+                                class="!text-sm items-center"></Select>
                         </div>
                         <div class="pt-8 flex justify-center">
-                            <Button :disabled="!isFormValid" type="submit" class="w-1/5" severity="contrast"
+                            <Button :disabled="!isFormValid" type="submit" class="w-1/3 md:w-1/5" severity="contrast"
                                 label="Cadastrar"></Button>
                         </div>
                     </form>
                 </template>
             </Card>
 
-            <Card class="mt-16 border w-11/12 md:w-9/12">
+            <Card class="mt-14 border w-11/12 md:w-9/12">
                 <template #title>
                     <span class="text-lg font-semibold"> Vote aqui </span>
                 </template>
@@ -38,12 +39,15 @@
                             <InputIcon class="pi pi-search"></InputIcon>
                         </IconField>
                     </div>
-                    <div class="!text-sm pt-5 flex justify-end flex-col">
-                        <span class="py-2">Filtrar por quantidade de votos</span>
+
+                    <span style="display: block;" class="!text-sm pt-9">Filtrar por quantidade de votos</span>
+                    <div class="!text-sm pt-5 flex justify-between">
                         <InputText v-model="voteQuantityString" class="!text-sm w-1/2 mb-4" @input="updateVoteQuantity"
                             placeholder="Quantidade de votos"></InputText>
-                        <Slider v-model="voteQuantity" class="w-1/2"></Slider>
+                        <Select v-model="classToFilter" :options="availablesClasses" optionLabel="name"
+                            placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center"></Select>
                     </div>
+                    <Slider v-model="voteToFilter" class="w-1/2"></Slider>
 
                     <div class="pt-8">
                         <Card class="border">
@@ -58,8 +62,11 @@
                                 </div>
 
                                 <div class="flex justify-between pt-9">
-                                    <span class="pt-4 flex justify-end">Quantidade de votos: 25 votos</span>
-                                    <Button @click="toastVote" label="VOTAR" class="w-1/4" severity="contrast"></Button>
+                                    <span class="pt-4 flex justify-end">Quantidade de votos: {{ totalVotes }}
+                                        voto(s)</span>
+                                    <Button :raised="isVoted" @click="toastVote"
+                                        :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4"
+                                        :severity="controlVoteButtonSeverity(isVoted)"></Button>
                                 </div>
                             </template>
                         </Card>
@@ -94,9 +101,11 @@ export default defineComponent({
                 { name: 'Redes de Computadores' },
                 { name: 'Sistemas Operacionais' }
             ] as Array<{ name: string }>,
-            voteQuantity: 50 as number,
+            voteToFilter: 50 as number,
             voteQuantityString: '50',
-
+            classToFilter: null as string | null,
+            isVoted: false as boolean,
+            totalVotes: 0 as number
         }
     },
     computed: {
@@ -113,18 +122,38 @@ export default defineComponent({
         submitForm(): void {
             if (this.isFormValid) {
                 this.$toast.add(ToastService.success(MessageToasts.SUCCESS_CREATE_LEADER));
+                this.clearRegistryFields();
             }
         },
         updateVoteQuantity() {
             const value = Number(this.voteQuantityString);
-            this.voteQuantity = isNaN(value) ? 0 : value;
+            this.voteToFilter = isNaN(value) ? 0 : value;
         },
         toastVote(): void {
-            this.$toast.add(ToastService.success(MessageToasts.SUCCESS_VOTE_LEADER));
+            this.isVoted = !this.isVoted;
+            if (this.isVoted) {
+                this.totalVotes += 1;
+                this.$toast.add(ToastService.success(MessageToasts.SUCCESS_VOTE_LEADER));
+            } else {
+                this.totalVotes -= 1;
+                this.$toast.add(ToastService.info(MessageToasts.INFO_REMOVED_VOTE_LEADER, "Voto removido"));
+            }
+        },
+        controlVoteButtonLabel(isVoted: boolean): string {
+            return isVoted ? 'REMOVER VOTO' : 'VOTAR';
+        },
+        controlVoteButtonSeverity(isVoted: boolean): string {
+            return isVoted ? 'secondary' : 'contrast';
+        },
+        clearRegistryFields(): void {
+            this.candidateName = '';
+            this.candidateNumber = '';
+            this.candidateRegistry = '';
+            this.selectedClass = null;
         }
     },
     watch: {
-        voteQuantity(newValue) {
+        voteToFilter(newValue) {
             this.voteQuantityString = String(newValue);
         }
     }
@@ -132,10 +161,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.playwrite-font {
-    font-family: 'Playwrite_DE_Grund', sans-serif;
-}
-
 ::v-deep .p-slider .p-slider-range {
     background-color: black !important;
 }

@@ -4,14 +4,6 @@
 
 @layer base {
   @font-face {
-    font-family: "Inter", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap);
-  }
-
-  @font-face {
     font-family: "Playwrite_DE_Grund";
     font-style: normal;
     font-weight: normal;
@@ -19,4 +11,9 @@
     font-display: swap;
     src: url('@/assets/fonts/playwrite-de-grund.ttf') format('truetype');
   }
+}
+
+[data-p-active="true"] {
+  background-color: rgba(238, 236, 236, 0.514) !important;
+  color: rgb(146, 144, 144) !important;
 }

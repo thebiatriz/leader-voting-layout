@@ -4,13 +4,15 @@
             class="!border-black !bg-black !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
             <template #start>
                 <div class="flex items-center space-x-4">
-                    <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe</span>
+                    <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe ADS</span>
+                    <Button @click="visibleInfoDialog = true" icon="pi pi-info-circle" text class="!rounded-full"
+                        severity="info" aria-label="Informações sobre a página de votação para líder Uni-Classe" />
                 </div>
             </template>
             <template #end>
                 <div class="flex items-center space-x-4">
-                    <Button @click="showToggleOptions($event)" icon="pi pi-user" severity="secondary" type="button"
-                        class="!rounded-full" />
+                    <Button @click="showToggleOptions($event)" :icon="controlToggleIcon(isToggleOpen)"
+                        severity="secondary" type="button" class="!rounded-full" />
                     <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true"></Menu>
                 </div>
             </template>
@@ -24,17 +26,16 @@
             <div class="py-4 flex justify-center">
                 <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3" maxlength="50"
                     placeholder="Senhora Lalá"></InputText>
-                <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm"
-                    placeholder="09"></InputText>
-                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
-                    placeholder="1-2024155074" mask="9-9999999999"></InputMask>
+                <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm" placeholder="09"></InputText>
+                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm" placeholder="1-2024155074"
+                    mask="9-9999999999"></InputMask>
                 <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
                     placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm"></Select>
             </div>
             <div class="pt-2 flex justify-end gap-6">
                 <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
                     @click="visibleDeleteDialog = false" />
-                <Button @click="toastEditCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4"/>
+                <Button @click="toastEditCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4" />
             </div>
         </Dialog>
 
@@ -46,12 +47,28 @@
             <div class="pt-8 flex justify-end gap-6">
                 <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
                     @click="visibleDeleteDialog = false" />
-                <Button @click="toastDeleteCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4"/>
+                <Button @click="toastDeleteCandidate" type="button" severity="contrast" label="Confirmar"
+                    class="w-1/4" />
             </div>
         </Dialog>
 
-        
-
+        <Dialog v-model:visible="visibleInfoDialog" maximizable modal :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <template #header>
+                <span class="text-2xl font-semibold">Sobre a página de votação Uni-Classe ADS</span>
+            </template>
+            <p><span style="display: block;">Olá! Espero que esteja bem.</span><br>Essa página foi desenvolvida com o
+                intuito de
+                servir como um meio de
+                votação de
+                líder de sala para os estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) da
+                Unifametro.<br>Aqui
+                é possível que os alunos possam realizar o seu cadastro como líder e também escolher em quem gostariam
+                de votar,
+                assim como acompanhar o andamento final.<br> <span style="display: block" class="my-4">Com atenção,
+                    desenvolvedora Beatriz Monteiro.</span>
+            </p>
+        </Dialog>
     </div>
 </template>
 
@@ -77,9 +94,10 @@ export default defineComponent({
                 { name: 'Sistemas Operacionais' }
             ] as Array<{ name: string }>,
             voteQuantity: 50 as number,
-            voteQuantityString: '50',
-            visibleDeleteDialog: false,
-            visibleEditDialog: false,
+            voteQuantityString: '50' as string,
+            visibleDeleteDialog: false as boolean,
+            visibleEditDialog: false as boolean,
+            visibleInfoDialog: false as boolean,
             toggleOptions: [
                 {
                     label: "Editar Candidato",
@@ -95,18 +113,23 @@ export default defineComponent({
                         this.openDeleteDialog(this.visibleDeleteDialog);
                     }
                 }
-            ]
+            ],
+            isToggleOpen: false as boolean,
+            toggleIcon: '' as string
         }
     },
     methods: {
         showToggleOptions(event: Event): void {
+            this.isToggleOpen = !this.isToggleOpen;
             const ref = this.$refs.menuPopUp as any;
             ref.toggle(event);
         },
         openDeleteDialog(isVisible: boolean): void {
+            this.isToggleOpen = !this.isToggleOpen;
             isVisible ? this.visibleDeleteDialog = false : this.visibleDeleteDialog = true;
         },
         openEditDialog(isVisible: boolean): void {
+            this.isToggleOpen = !this.isToggleOpen;
             isVisible ? this.visibleEditDialog = false : this.visibleEditDialog = true;
         },
         toastDeleteCandidate(): void {
@@ -116,6 +139,9 @@ export default defineComponent({
         toastEditCandidate(): void {
             this.visibleEditDialog = false;
             this.$toast.add(ToastService.success(MessageToasts.SUCCESS_EDIT_LEADER));
+        },
+        controlToggleIcon(isToggleOpen: boolean): string {
+            return isToggleOpen ? 'pi pi-times' : 'pi pi-bars';
         }
     }
 })

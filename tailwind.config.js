@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'inter': ['Inter', 'sans-serif']
+        'playwrite': ['Playwrite_DE_Grund', 'sans-serif']
       }
     },
   },
