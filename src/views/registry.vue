@@ -65,7 +65,7 @@
                                     <span class="pt-4 flex justify-end">Quantidade de votos: {{ totalVotes }}
                                         voto(s)</span>
                                     <Button :raised="isVoted" @click="toastVote"
-                                        :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4"
+                                        :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4 active:scale-95"
                                         :severity="controlVoteButtonSeverity(isVoted)"></Button>
                                 </div>
                             </template>
