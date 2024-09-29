@@ -125,7 +125,7 @@ export default defineComponent({
                 this.clearRegistryFields();
             }
         },
-        updateVoteQuantity() {
+        updateVoteQuantity(): void {
             const value = Number(this.voteQuantityString);
             this.voteToFilter = isNaN(value) ? 0 : value;
         },
