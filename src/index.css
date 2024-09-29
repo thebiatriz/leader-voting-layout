@@ -4,7 +4,7 @@
 
 @layer base {
   @font-face {
-    font-family: "Playwrite_DE_Grund";
+    font-family: 'Playwrite_DE_Grund';
     font-style: normal;
     font-weight: normal;
     font-weight: 400;
@@ -13,7 +13,7 @@
   }
 }
 
-[data-p-active="true"] {
+[data-p-active='true'] {
   background-color: rgba(238, 236, 236, 0.514) !important;
   color: rgb(146, 144, 144) !important;
 }

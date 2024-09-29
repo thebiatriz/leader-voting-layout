@@ -27,8 +27,8 @@
                 <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3" maxlength="50"
                     placeholder="Senhora Lalá"></InputText>
                 <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm" placeholder="09"></InputText>
-                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm" placeholder="1-2024155074"
-                    mask="9-9999999999"></InputMask>
+                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
+                    placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
                 <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
                     placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm"></Select>
             </div>
@@ -72,7 +72,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { MessageToasts } from '@/utils/toast-messages.utils';
 import { ToastService } from '@/utils/toast-service.utils';
 import { defineComponent } from 'vue';
@@ -81,9 +81,9 @@ export default defineComponent({
     name: 'toolbar',
     data() {
         return {
-            candidateName: '' as string,
-            candidateNumber: '' as string,
-            candidateRegistry: '' as string,
+            candidateName: 'Senhora Lalá' as string,
+            candidateNumber: '09' as string,
+            candidateRegistry: '1-2024188888' as string,
             selectedClass: null as string | null,
             availablesClasses: [
                 { name: 'Fundamentos de Análise' },
@@ -100,15 +100,15 @@ export default defineComponent({
             visibleInfoDialog: false as boolean,
             toggleOptions: [
                 {
-                    label: "Editar Candidato",
-                    icon: "pi pi-pencil",
+                    label: 'Editar Candidato',
+                    icon: 'pi pi-pencil',
                     command: () => {
                         this.openEditDialog(this.visibleDeleteDialog);
                     }
                 },
                 {
-                    label: "Deletar Candidato",
-                    icon: "pi pi-trash",
+                    label: 'Deletar Candidato',
+                    icon: 'pi pi-trash',
                     command: () => {
                         this.openDeleteDialog(this.visibleDeleteDialog);
                     }

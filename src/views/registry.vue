@@ -11,17 +11,17 @@
                         <div class="pt-4 flex justify-center">
                             <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3"
                                 maxlength="50" placeholder="Nome do candidato"></InputText>
-                            <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm"
+                            <InputText v-model="candidateNumber" maxlength="13" required class="w-1/4 mr-2 !text-sm"
                                 placeholder="Número escolhido para o candidato"></InputText>
                             <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
                                 placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
-                            <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
+                            <Select v-model="selectedClass" show-clear :options="availablesClasses" optionLabel="name"
                                 placeholder="Escolha a turma" aria-required="true"
                                 class="!text-sm items-center"></Select>
                         </div>
                         <div class="pt-8 flex justify-center">
-                            <Button :disabled="!isFormValid" type="submit" class="w-1/3 md:w-1/5" severity="contrast"
-                                label="Cadastrar"></Button>
+                            <Button :disabled="!isFormValid" type="submit" class="w-1/3 md:w-1/5" label="Cadastrar"
+                                :class="registryButtonClass"></Button>
                         </div>
                     </form>
                 </template>
@@ -44,7 +44,7 @@
                     <div class="!text-sm pt-5 flex justify-between">
                         <InputText v-model="voteQuantityString" class="!text-sm w-1/2 mb-4" @input="updateVoteQuantity"
                             placeholder="Quantidade de votos"></InputText>
-                        <Select v-model="classToFilter" :options="availablesClasses" optionLabel="name"
+                        <Select v-model="classToFilter" show-clear :options="availablesClasses" optionLabel="name"
                             placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center"></Select>
                     </div>
                     <Slider v-model="voteToFilter" class="w-1/2"></Slider>
@@ -80,13 +80,13 @@
     </main>
 </template>
 
-<script lang="ts">
-import { MessageToasts } from "@/utils/toast-messages.utils";
-import { ToastService } from "@/utils/toast-service.utils";
-import { defineComponent } from "vue";
+<script lang='ts'>
+import { MessageToasts } from '@/utils/toast-messages.utils';
+import { ToastService } from '@/utils/toast-service.utils';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: "Home",
+    name: 'Home',
     data() {
         return {
             candidateName: '' as string,
@@ -114,8 +114,8 @@ export default defineComponent({
         },
         registryButtonClass(): string {
             return this.isFormValid
-                ? '!border-[#8e96db] active:scale-95 !bg-[#a7aeff]'
-                : '!border-[#8e96db] !bg-gray-400';
+                ? '!border-black hover:!bg-gray-800 active:scale-95 !bg-black'
+                : '!border-[#8e96db] !bg-gray-400 ';
         }
     },
     methods: {
@@ -136,7 +136,7 @@ export default defineComponent({
                 this.$toast.add(ToastService.success(MessageToasts.SUCCESS_VOTE_LEADER));
             } else {
                 this.totalVotes -= 1;
-                this.$toast.add(ToastService.info(MessageToasts.INFO_REMOVED_VOTE_LEADER, "Voto removido"));
+                this.$toast.add(ToastService.info(MessageToasts.INFO_REMOVED_VOTE_LEADER, 'Voto removido'));
             }
         },
         controlVoteButtonLabel(isVoted: boolean): string {
@@ -150,7 +150,8 @@ export default defineComponent({
             this.candidateNumber = '';
             this.candidateRegistry = '';
             this.selectedClass = null;
-        }
+        },
+
     },
     watch: {
         voteToFilter(newValue) {
