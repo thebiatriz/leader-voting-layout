@@ -1,13 +1,13 @@
 <template>
     <main class="font-playwrite w-full">
         <h1 class="text-xl font-bold flex justify-center">BEM-VINDO A VOTAÇÃO</h1>
-        <div class="flex flex-col justify-center items-center">
+        <section class="flex flex-col justify-center items-center">
             <Card class="mt-5 border w-11/12 md:w-9/12">
                 <template #title>
                     <span class="text-lg font-semibold"> Cadastre o Líder </span>
                 </template>
                 <template #content>
-                    <form @submit.prevent="submitForm">
+                    <form @submit.prevent="visibleRegistryDialog = true">
                         <div class="pt-4 flex justify-center">
                             <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3"
                                 maxlength="50" placeholder="Nome do candidato"></InputText>
@@ -76,7 +76,8 @@
                     </div>
                 </template>
             </Card>
-        </div>
+        </section>
+        <Login :visible="visibleRegistryDialog" @registry-candidate="submitForm" @cancel-dialog="visibleRegistryDialog = false"></Login>
     </main>
 </template>
 
@@ -105,7 +106,8 @@ export default defineComponent({
             voteQuantityString: '50',
             classToFilter: null as string | null,
             isVoted: false as boolean,
-            totalVotes: 0 as number
+            totalVotes: 0 as number,
+            visibleRegistryDialog: false as boolean
         }
     },
     computed: {
@@ -121,6 +123,7 @@ export default defineComponent({
     methods: {
         submitForm(): void {
             if (this.isFormValid) {
+                this.visibleRegistryDialog = false;
                 this.$toast.add(ToastService.success(MessageToasts.SUCCESS_CREATE_LEADER));
                 this.clearRegistryFields();
             }

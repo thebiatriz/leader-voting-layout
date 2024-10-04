@@ -1,5 +1,5 @@
 export class Views {
   static Home(): Promise<any> {
-    return import('@/views/registry.vue');
+    return import('@/views/Registry/registry.vue');
   }
 }
