@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-0 w-full z-50">
+    <main class="fixed top-0 w-full z-50">
         <Toolbar
             class="!border-black !bg-black !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
             <template #start>
@@ -13,24 +13,22 @@
                 <div class="flex items-center space-x-4">
                     <Button @click="showToggleOptions($event)" :icon="controlToggleIcon(isToggleOpen)"
                         severity="secondary" type="button" class="!rounded-full" />
-                    <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true"></Menu>
+                    <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true" />
                 </div>
             </template>
         </Toolbar>
 
         <Dialog v-model:visible="visibleEditDialog" modal class="w-1/2">
             <template #header>
-                <span class="text-2xl font-semibold">Editar candidato</span>
+                <span class="text-2xl font-semibold">Editar cadastro</span>
             </template>
             <span>Preencha os dados abaixo para a mudança</span>
             <div class="py-4 flex justify-center">
-                <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3" maxlength="50"
-                    placeholder="Senhora Lalá"></InputText>
-                <InputText v-model="candidateNumber" required class="w-1/4 mr-2 !text-sm" placeholder="09"></InputText>
-                <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
-                    placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
+                <InputText v-model="candidateName" required class="w-1/3 mr-2 !text-sm" minlength="3" maxlength="50"
+                    placeholder="Senhora Lalá" />
+                <InputText v-model="candidateNumber" required class="w-1/3 mr-2 !text-sm" placeholder="09" />
                 <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
-                    placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm"></Select>
+                    placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm w-1/3" />
             </div>
             <div class="pt-2 flex justify-end gap-6">
                 <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
@@ -41,12 +39,12 @@
 
         <Dialog v-model:visible="visibleDeleteDialog" modal class="w-1/3">
             <template #header>
-                <span class="text-2xl font-semibold">Deletar candidato</span>
+                <span class="text-2xl font-semibold">Deletar cadastro</span>
             </template>
-            <span>Você confirma em deletar o cadastro a Líder "Seu nome"?</span>
+            <span>Você confirma em deletar o seu cadastro como Líder?</span>
             <div class="pt-8 flex justify-end gap-6">
                 <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
-                    @click="visibleDeleteDialog = false" />
+                    @click="visibleEditDialog = false" />
                 <Button @click="toastDeleteCandidate" type="button" severity="contrast" label="Confirmar"
                     class="w-1/4" />
             </div>
@@ -69,7 +67,7 @@
                     desenvolvedora Beatriz Monteiro.</span>
             </p>
         </Dialog>
-    </div>
+    </main>
 </template>
 
 <script lang='ts'>
@@ -83,7 +81,6 @@ export default defineComponent({
         return {
             candidateName: 'Senhora Lalá' as string,
             candidateNumber: '09' as string,
-            candidateRegistry: '1-2024188888' as string,
             selectedClass: null as string | null,
             availablesClasses: [
                 { name: 'Fundamentos de Análise' },
@@ -100,14 +97,14 @@ export default defineComponent({
             visibleInfoDialog: false as boolean,
             toggleOptions: [
                 {
-                    label: 'Editar Candidato',
+                    label: 'Editar cadastro',
                     icon: 'pi pi-pencil',
                     command: () => {
                         this.openEditDialog(this.visibleDeleteDialog);
                     }
                 },
                 {
-                    label: 'Deletar Candidato',
+                    label: 'Deletar cadastro',
                     icon: 'pi pi-trash',
                     command: () => {
                         this.openDeleteDialog(this.visibleDeleteDialog);

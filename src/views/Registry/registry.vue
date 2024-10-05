@@ -4,20 +4,18 @@
         <section class="flex flex-col justify-center items-center">
             <Card class="mt-5 border w-11/12 md:w-9/12">
                 <template #title>
-                    <span class="text-lg font-semibold"> Cadastre o Líder </span>
+                    <span class="text-lg font-semibold"> Cadastre-se a Líder </span>
                 </template>
                 <template #content>
-                    <form @submit.prevent="visibleRegistryDialog = true">
+                    <form @submit.prevent="submitForm">
                         <div class="pt-4 flex justify-center">
-                            <InputText v-model="candidateName" required class="w-1/4 mr-2 !text-sm" minlength="3"
-                                maxlength="50" placeholder="Nome do candidato"></InputText>
-                            <InputText v-model="candidateNumber" maxlength="13" required class="w-1/4 mr-2 !text-sm"
-                                placeholder="Número escolhido para o candidato"></InputText>
-                            <InputMask v-model="candidateRegistry" required class="w-1/4 mr-2 !text-sm"
-                                placeholder="Matrícula do candidato" mask="9-9999999999"></InputMask>
+                            <InputText v-model="candidateName" required class="w-1/3 mr-2 !text-sm" minlength="3"
+                                maxlength="50" placeholder="Seu nome"></InputText>
+                            <InputText v-model="candidateNumber" maxlength="13" required class="w-1/3 mr-2 !text-sm"
+                                placeholder="Número escolhido para candidato"></InputText>
                             <Select v-model="selectedClass" show-clear :options="availablesClasses" optionLabel="name"
-                                placeholder="Escolha a turma" aria-required="true"
-                                class="!text-sm items-center"></Select>
+                                placeholder="Escolha a turma para ser líder" aria-required="true"
+                                class="!text-sm items-center w-1/3"></Select>
                         </div>
                         <div class="pt-8 flex justify-center">
                             <Button :disabled="!isFormValid" type="submit" class="w-1/3 md:w-1/5" label="Cadastrar"
@@ -32,20 +30,19 @@
                     <span class="text-lg font-semibold"> Vote aqui </span>
                 </template>
                 <template #content>
-                    <div class="pt-4">
+                      <div  class="pt-4">
                         <IconField>
-                            <InputText class="w-full !text-sm" variant="filled" placeholder="Pesquisar Candidato">
-                            </InputText>
-                            <InputIcon class="pi pi-search"></InputIcon>
+                            <InputText class="w-full !text-sm" variant="filled" placeholder="Pesquisar Candidato"/>
+                            <InputIcon class="pi pi-search"/>
                         </IconField>
-                    </div>
+                      </div>
 
                     <span style="display: block;" class="!text-sm pt-9">Filtrar por quantidade de votos</span>
                     <div class="!text-sm pt-5 flex justify-between">
                         <InputText v-model="voteQuantityString" class="!text-sm w-1/2 mb-4" @input="updateVoteQuantity"
                             placeholder="Quantidade de votos"></InputText>
                         <Select v-model="classToFilter" show-clear :options="availablesClasses" optionLabel="name"
-                            placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center"></Select>
+                            placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center w-1/3 lg:w-1/6"></Select>
                     </div>
                     <Slider v-model="voteToFilter" class="w-1/2"></Slider>
 
@@ -58,7 +55,6 @@
                                 <div class="flex flex-col pt-3">
                                     <span class="text-sm pb-2">Turma: Interface Homem Máquina </span>
                                     <span class="text-sm pb-2">Número: 08 </span>
-                                    <span class="text-sm pb-2">Matrícula: 1-2024123456 </span>
                                 </div>
 
                                 <div class="flex justify-between pt-9">
@@ -77,7 +73,8 @@
                 </template>
             </Card>
         </section>
-        <Login :visible="visibleRegistryDialog" @registry-candidate="submitForm" @cancel-dialog="visibleRegistryDialog = false"></Login>
+        <Login :visible="visibleRegistryDialog" :userRegistry="userRegistry" :userPassword="userPassword"
+            @user-login="onLogin"></Login>
     </main>
 </template>
 
@@ -92,7 +89,6 @@ export default defineComponent({
         return {
             candidateName: '' as string,
             candidateNumber: '' as string,
-            candidateRegistry: '' as string,
             selectedClass: null as string | null,
             availablesClasses: [
                 { name: 'Fundamentos de Análise' },
@@ -103,22 +99,25 @@ export default defineComponent({
                 { name: 'Sistemas Operacionais' }
             ] as Array<{ name: string }>,
             voteToFilter: 50 as number,
-            voteQuantityString: '50',
+            voteQuantityString: '50' as string,
             classToFilter: null as string | null,
             isVoted: false as boolean,
             totalVotes: 0 as number,
-            visibleRegistryDialog: false as boolean
+            visibleRegistryDialog: true as boolean,
+            userRegistry: '' as string,
+            userPassword: '' as string,
         }
     },
     computed: {
         isFormValid(): boolean {
-            return this.candidateName !== '' && this.candidateNumber !== '' && this.candidateRegistry !== '' && this.selectedClass !== null;
+            return this.candidateName !== '' && this.candidateNumber !== '' && this.selectedClass !== null;
         },
+
         registryButtonClass(): string {
             return this.isFormValid
                 ? '!border-black hover:!bg-gray-800 active:scale-95 !bg-black'
                 : '!border-[#8e96db] !bg-gray-400 ';
-        }
+        },
     },
     methods: {
         submitForm(): void {
@@ -151,10 +150,18 @@ export default defineComponent({
         clearRegistryFields(): void {
             this.candidateName = '';
             this.candidateNumber = '';
-            this.candidateRegistry = '';
             this.selectedClass = null;
         },
+        onLogin(loginData: { registry: string, password: string }): void {
+            this.userRegistry = loginData.registry;
+            this.userPassword = loginData.password;
 
+            if (this.userPassword === '' || this.userRegistry === '') {
+                this.$toast.add(ToastService.error(MessageToasts.ERROR_USER_LOGIN, "Erro ao entrar"));
+            } else {
+                this.visibleRegistryDialog = false;
+            }
+        },
     },
     watch: {
         voteToFilter(newValue) {
