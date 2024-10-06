@@ -1,19 +1,20 @@
 <template>
     <main class="fixed top-0 w-full z-50">
         <Toolbar
-            class="!border-black !bg-black !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
+            class="!border-[#1F3A78] !bg-[#1F3A78] !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
             <template #start>
                 <div class="flex items-center space-x-4">
                     <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe ADS</span>
-                    <Button @click="visibleInfoDialog = true" icon="pi pi-info-circle" text class="!rounded-full"
-                        severity="info" aria-label="Informações sobre a página de votação para líder Uni-Classe" />
+                    <Button @click="visibleInfoDialog = true" icon="pi pi-info-circle" text
+                        class="!rounded-full !text-[#CFA34B] hover:!bg-slate-500" severity="warn"
+                        aria-label="Informações sobre a página de votação para líder Uni-Classe" />
                 </div>
             </template>
             <template #end>
                 <div class="flex items-center space-x-4">
                     <Button @click="showToggleOptions($event)" :icon="controlToggleIcon(isToggleOpen)"
                         severity="secondary" type="button" class="!rounded-full" />
-                    <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true" />
+                    <Menu ref="menuPopUp" id="overlay_menu" :model="toggleOptions" :popup="true" @hide="onMenuHide" />
                 </div>
             </template>
         </Toolbar>
@@ -32,8 +33,9 @@
             </div>
             <div class="pt-2 flex justify-end gap-6">
                 <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
-                    @click="visibleDeleteDialog = false" />
-                <Button @click="toastEditCandidate" type="button" severity="contrast" label="Confirmar" class="w-1/4" />
+                    @click="visibleEditDialog = false" />
+                <Button @click="toastEditCandidate" type="button" label="Confirmar"
+                    class="active:scale-95 w-1/4 !border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84]" />
             </div>
         </Dialog>
 
@@ -43,10 +45,10 @@
             </template>
             <span>Você confirma em deletar o seu cadastro como Líder?</span>
             <div class="pt-8 flex justify-end gap-6">
-                <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
-                    @click="visibleEditDialog = false" />
-                <Button @click="toastDeleteCandidate" type="button" severity="contrast" label="Confirmar"
-                    class="w-1/4" />
+                <Button type="button" class="w-1/4 active:scale-95" label="Cancelar" severity="secondary"
+                    @click="visibleDeleteDialog = false" />
+                <Button @click="toastDeleteCandidate" type="button" label="Confirmar"
+                    class="active:scale-95 w-1/4 !border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84]" />
             </div>
         </Dialog>
 
@@ -122,11 +124,9 @@ export default defineComponent({
             ref.toggle(event);
         },
         openDeleteDialog(isVisible: boolean): void {
-            this.isToggleOpen = !this.isToggleOpen;
             isVisible ? this.visibleDeleteDialog = false : this.visibleDeleteDialog = true;
         },
         openEditDialog(isVisible: boolean): void {
-            this.isToggleOpen = !this.isToggleOpen;
             isVisible ? this.visibleEditDialog = false : this.visibleEditDialog = true;
         },
         toastDeleteCandidate(): void {
@@ -139,7 +139,10 @@ export default defineComponent({
         },
         controlToggleIcon(isToggleOpen: boolean): string {
             return isToggleOpen ? 'pi pi-times' : 'pi pi-bars';
-        }
+        },
+        onMenuHide(): void {
+            this.isToggleOpen = false;
+        },
     }
 })
 </script>

@@ -30,19 +30,20 @@
                     <span class="text-lg font-semibold"> Vote aqui </span>
                 </template>
                 <template #content>
-                      <div  class="pt-4">
+                    <div class="pt-4">
                         <IconField>
-                            <InputText class="w-full !text-sm" variant="filled" placeholder="Pesquisar Candidato"/>
-                            <InputIcon class="pi pi-search"/>
+                            <InputText class="w-full !text-sm" variant="filled" placeholder="Pesquisar Candidato" />
+                            <InputIcon class="pi pi-search" />
                         </IconField>
-                      </div>
+                    </div>
 
                     <span style="display: block;" class="!text-sm pt-9">Filtrar por quantidade de votos</span>
                     <div class="!text-sm pt-5 flex justify-between">
                         <InputText v-model="voteQuantityString" class="!text-sm w-1/2 mb-4" @input="updateVoteQuantity"
                             placeholder="Quantidade de votos"></InputText>
                         <Select v-model="classToFilter" show-clear :options="availablesClasses" optionLabel="name"
-                            placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center w-1/3 lg:w-1/6"></Select>
+                            placeholder="Filtre por turma" aria-required="true"
+                            class="!text-sm items-center w-fit"></Select>
                     </div>
                     <Slider v-model="voteToFilter" class="w-1/2"></Slider>
 
@@ -58,11 +59,15 @@
                                 </div>
 
                                 <div class="flex justify-between pt-9">
-                                    <span class="pt-4 flex justify-end">Quantidade de votos: {{ totalVotes }}
-                                        voto(s)</span>
+                                    <span v-if="totalVotes === 1" class="pt-4 flex justify-end">Quantidade de votos: {{
+                                        totalVotes }}
+                                        voto</span>
+                                    <span v-else class="pt-4 flex justify-end">Quantidade de votos: {{ totalVotes }}
+                                        votos</span>
                                     <Button :raised="isVoted" @click="toastVote"
+                                        :severity="isVoted ? 'secondary' : undefined"
                                         :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4 active:scale-95"
-                                        :severity="controlVoteButtonSeverity(isVoted)"></Button>
+                                        :class="controlVoteButtonClass(isVoted)"></Button>
                                 </div>
                             </template>
                         </Card>
@@ -84,7 +89,7 @@ import { ToastService } from '@/utils/toast-service.utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: 'Home',
+    name: 'home',
     data() {
         return {
             candidateName: '' as string,
@@ -112,11 +117,10 @@ export default defineComponent({
         isFormValid(): boolean {
             return this.candidateName !== '' && this.candidateNumber !== '' && this.selectedClass !== null;
         },
-
         registryButtonClass(): string {
             return this.isFormValid
-                ? '!border-black hover:!bg-gray-800 active:scale-95 !bg-black'
-                : '!border-[#8e96db] !bg-gray-400 ';
+                ? '!border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84] active:scale-95'
+                : '!border-[#8E96DB] !bg-gray-400 ';
         },
     },
     methods: {
@@ -144,8 +148,8 @@ export default defineComponent({
         controlVoteButtonLabel(isVoted: boolean): string {
             return isVoted ? 'REMOVER VOTO' : 'VOTAR';
         },
-        controlVoteButtonSeverity(isVoted: boolean): string {
-            return isVoted ? 'secondary' : 'contrast';
+        controlVoteButtonClass(isVoted: boolean): string {
+            return isVoted ? '' : '!border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84]';
         },
         clearRegistryFields(): void {
             this.candidateName = '';
@@ -173,15 +177,15 @@ export default defineComponent({
 
 <style scoped>
 ::v-deep .p-slider .p-slider-range {
-    background-color: black !important;
+    background-color: #1F3A78 !important;
 }
 
 ::v-deep .p-slider .p-slider-handle {
-    background-color: black !important;
+    background-color: #1F3A78 !important;
 }
 
 ::v-deep .p-slider .p-slider-handle:focus {
     outline: none !important;
-    box-shadow: 0 0 0 3px gray !important;
+    box-shadow: 0 0 0 3px rgb(165, 164, 164) !important;
 }
 </style>
