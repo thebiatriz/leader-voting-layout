@@ -19,60 +19,21 @@
             </template>
         </Toolbar>
 
-        <Dialog v-model:visible="visibleEditDialog" modal class="w-1/2">
-            <template #header>
-                <span class="text-2xl font-semibold">Editar cadastro</span>
-            </template>
-            <span>Preencha os dados abaixo para a mudança</span>
-            <div class="py-4 flex justify-center">
-                <InputText v-model="candidateName" required class="w-1/3 mr-2 !text-sm" minlength="3" maxlength="50"
-                    placeholder="Senhora Lalá" />
-                <InputText v-model="candidateNumber" required class="w-1/3 mr-2 !text-sm" placeholder="09" />
-                <Select v-model="selectedClass" :options="availablesClasses" optionLabel="name"
-                    placeholder="Interface Homem Máquina" aria-required="true" class="!text-sm w-1/3" />
-            </div>
-            <div class="pt-2 flex justify-end gap-6">
-                <Button type="button" class="w-1/4" label="Cancelar" severity="secondary"
-                    @click="visibleEditDialog = false" />
-                <Button @click="toastEditCandidate" type="button" label="Confirmar"
-                    class="active:scale-95 w-1/4 !border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84]" />
-            </div>
-        </Dialog>
+        <EditDialog :visible="visibleEditDialog" @cancel-dialog="visibleEditDialog = false"
+            @update-candidate="toastEditCandidate"></EditDialog>
 
-        <Dialog v-model:visible="visibleDeleteDialog" modal class="w-1/3">
-            <template #header>
-                <span class="text-2xl font-semibold">Deletar cadastro</span>
-            </template>
-            <span>Você confirma em deletar o seu cadastro como Líder?</span>
-            <div class="pt-8 flex justify-end gap-6">
-                <Button type="button" class="w-1/4 active:scale-95" label="Cancelar" severity="secondary"
-                    @click="visibleDeleteDialog = false" />
-                <Button @click="toastDeleteCandidate" type="button" label="Confirmar"
-                    class="active:scale-95 w-1/4 !border-[#1F3A78] !bg-[#1F3A78] hover:!bg-[#1E4A84]" />
-            </div>
-        </Dialog>
+        <DeleteDialog :visible="visibleDeleteDialog" @cancel-dialog="visibleDeleteDialog = false"
+            @delete-candidate="toastDeleteCandidate" />
 
-        <Dialog v-model:visible="visibleInfoDialog" maximizable modal :style="{ width: '50rem' }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-            <template #header>
-                <span class="text-2xl font-semibold">Sobre a página de votação Uni-Classe ADS</span>
-            </template>
-            <p><span style="display: block;">Olá! Espero que esteja bem.</span><br>Essa página foi desenvolvida com o
-                intuito de
-                servir como um meio de
-                votação de
-                líder de sala para os estudantes do curso de Análise e Desenvolvimento de Sistemas (ADS) da
-                Unifametro.<br>Aqui
-                é possível que os alunos possam realizar o seu cadastro como líder e também escolher em quem gostariam
-                de votar,
-                assim como acompanhar o andamento final.<br> <span style="display: block" class="my-4">Com atenção,
-                    desenvolvedora Beatriz Monteiro.</span>
-            </p>
-        </Dialog>
+        <AboutDialog :visible="visibleInfoDialog" @cancel-dialog="visibleInfoDialog = false" />
+
+        <LogoutDialog :visible="visibleLogoutDialog" @cancel-dialog="visibleLogoutDialog = false"
+            @logout-user="onLogout" />
     </main>
 </template>
 
 <script lang='ts'>
+import { getWindowScroll } from '@/utils/adjustScreen.utils';
 import { MessageToasts } from '@/utils/toast-messages.utils';
 import { ToastService } from '@/utils/toast-service.utils';
 import { defineComponent } from 'vue';
@@ -81,22 +42,12 @@ export default defineComponent({
     name: 'toolbar',
     data() {
         return {
-            candidateName: 'Senhora Lalá' as string,
-            candidateNumber: '09' as string,
-            selectedClass: null as string | null,
-            availablesClasses: [
-                { name: 'Fundamentos de Análise' },
-                { name: 'Gerenciamento de TI' },
-                { name: 'Interface Homem Máquina' },
-                { name: 'Projeto de Extensão - REDES' },
-                { name: 'Redes de Computadores' },
-                { name: 'Sistemas Operacionais' }
-            ] as Array<{ name: string }>,
             voteQuantity: 50 as number,
             voteQuantityString: '50' as string,
             visibleDeleteDialog: false as boolean,
             visibleEditDialog: false as boolean,
             visibleInfoDialog: false as boolean,
+            visibleLogoutDialog: false as boolean,
             toggleOptions: [
                 {
                     label: 'Editar cadastro',
@@ -111,10 +62,17 @@ export default defineComponent({
                     command: () => {
                         this.openDeleteDialog(this.visibleDeleteDialog);
                     }
+                },
+                {
+                    label: 'Sair',
+                    icon: 'pi pi-sign-out',
+                    command: () => {
+                        this.openLogoutDialog(this.visibleLogoutDialog);
+                    }
                 }
             ],
             isToggleOpen: false as boolean,
-            toggleIcon: '' as string
+            toggleIcon: '' as string,
         }
     },
     methods: {
@@ -128,6 +86,9 @@ export default defineComponent({
         },
         openEditDialog(isVisible: boolean): void {
             isVisible ? this.visibleEditDialog = false : this.visibleEditDialog = true;
+        },
+        openLogoutDialog(isVisible: boolean): void {
+            isVisible ? this.visibleLogoutDialog = false : this.visibleLogoutDialog = true;
         },
         toastDeleteCandidate(): void {
             this.visibleDeleteDialog = false;
@@ -143,6 +104,11 @@ export default defineComponent({
         onMenuHide(): void {
             this.isToggleOpen = false;
         },
+        onLogout(): void {
+            this.visibleLogoutDialog = false;
+            getWindowScroll();
+            location.reload();
+        }
     }
 })
 </script>

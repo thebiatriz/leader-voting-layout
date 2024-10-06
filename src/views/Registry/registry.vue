@@ -10,16 +10,16 @@
                     <form @submit.prevent="submitForm">
                         <div class="pt-4 flex justify-center">
                             <InputText v-model="candidateName" required class="w-1/3 mr-2 !text-sm" minlength="3"
-                                maxlength="50" placeholder="Seu nome"></InputText>
+                                maxlength="50" placeholder="Seu nome" />
                             <InputText v-model="candidateNumber" maxlength="13" required class="w-1/3 mr-2 !text-sm"
-                                placeholder="Número escolhido para candidato"></InputText>
+                                placeholder="Número escolhido para candidato" />
                             <Select v-model="selectedClass" show-clear :options="availablesClasses" optionLabel="name"
                                 placeholder="Escolha a turma para ser líder" aria-required="true"
-                                class="!text-sm items-center w-1/3"></Select>
+                                class="!text-sm items-center w-1/3" />
                         </div>
                         <div class="pt-8 flex justify-center">
                             <Button :disabled="!isFormValid" type="submit" class="w-1/3 md:w-1/5" label="Cadastrar"
-                                :class="registryButtonClass"></Button>
+                                :class="registryButtonClass" />
                         </div>
                     </form>
                 </template>
@@ -40,12 +40,11 @@
                     <span style="display: block;" class="!text-sm pt-9">Filtrar por quantidade de votos</span>
                     <div class="!text-sm pt-5 flex justify-between">
                         <InputText v-model="voteQuantityString" class="!text-sm w-1/2 mb-4" @input="updateVoteQuantity"
-                            placeholder="Quantidade de votos"></InputText>
+                            placeholder="Quantidade de votos" />
                         <Select v-model="classToFilter" show-clear :options="availablesClasses" optionLabel="name"
-                            placeholder="Filtre por turma" aria-required="true"
-                            class="!text-sm items-center w-fit"></Select>
+                            placeholder="Filtre por turma" aria-required="true" class="!text-sm items-center w-fit" />
                     </div>
-                    <Slider v-model="voteToFilter" class="w-1/2"></Slider>
+                    <Slider v-model="voteToFilter" class="w-1/2" />
 
                     <div class="pt-8">
                         <Card class="border">
@@ -67,25 +66,25 @@
                                     <Button :raised="isVoted" @click="toastVote"
                                         :severity="isVoted ? 'secondary' : undefined"
                                         :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4 active:scale-95"
-                                        :class="controlVoteButtonClass(isVoted)"></Button>
+                                        :class="controlVoteButtonClass(isVoted)" />
                                 </div>
                             </template>
                         </Card>
                         <Paginator :rows="3" :total-records="3"
-                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink">
-                        </Paginator>
+                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink" />
                     </div>
                 </template>
             </Card>
         </section>
         <Login :visible="visibleRegistryDialog" :userRegistry="userRegistry" :userPassword="userPassword"
-            @user-login="onLogin"></Login>
+            @user-login="onLogin" />
     </main>
 </template>
 
 <script lang='ts'>
 import { MessageToasts } from '@/utils/toast-messages.utils';
 import { ToastService } from '@/utils/toast-service.utils';
+import { handleLogin } from '@/utils/login.utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -157,14 +156,7 @@ export default defineComponent({
             this.selectedClass = null;
         },
         onLogin(loginData: { registry: string, password: string }): void {
-            this.userRegistry = loginData.registry;
-            this.userPassword = loginData.password;
-
-            if (this.userPassword === '' || this.userRegistry === '') {
-                this.$toast.add(ToastService.error(MessageToasts.ERROR_USER_LOGIN, "Erro ao entrar"));
-            } else {
-                this.visibleRegistryDialog = false;
-            }
+            handleLogin(loginData, this);
         },
     },
     watch: {
