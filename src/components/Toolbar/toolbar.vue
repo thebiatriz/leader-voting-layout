@@ -33,7 +33,7 @@
 </template>
 
 <script lang='ts'>
-import { getWindowScroll } from '@/utils/adjustScreen.utils';
+import { getWindowScroll } from '@/utils/adjust-screen.utils';
 import { MessageToasts } from '@/utils/toast-messages.utils';
 import { ToastService } from '@/utils/toast-service.utils';
 import { defineComponent } from 'vue';
