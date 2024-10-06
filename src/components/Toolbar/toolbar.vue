@@ -4,7 +4,7 @@
             class="!border-[#1F3A78] !bg-[#1F3A78] !text-white flex justify-between items-center p-4 shadow-lg !rounded-none">
             <template #start>
                 <div class="flex items-center space-x-4">
-                    <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe ADS</span>
+                    <span class="ml-3 md:ml-5 text-2xl font-bold md:text-3xl">Líder Uni-Classe</span>
                     <Button @click="visibleInfoDialog = true" icon="pi pi-info-circle" text
                         class="!rounded-full !text-[#CFA34B] hover:!bg-slate-500" severity="warn"
                         aria-label="Informações sobre a página de votação para líder Uni-Classe" />
