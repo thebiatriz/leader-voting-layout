@@ -25,7 +25,7 @@
                 </template>
             </Card>
 
-            <Card class="mt-14 border w-11/12 md:w-9/12">
+            <Card class="mt-14 mb-7 border w-11/12 md:w-9/12">
                 <template #title>
                     <span class="text-lg font-semibold"> Vote aqui </span>
                 </template>
@@ -65,12 +65,12 @@
                                         votos</span>
                                     <Button :raised="isVoted" @click="toastVote"
                                         :severity="isVoted ? 'secondary' : undefined"
-                                        :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/4 active:scale-95"
+                                        :label="controlVoteButtonLabel(isVoted)" class="w-1/3 md:w-1/5 active:scale-95"
                                         :class="controlVoteButtonClass(isVoted)" />
                                 </div>
                             </template>
                         </Card>
-                        <Paginator :rows="3" :total-records="3"
+                        <Paginator :rows="3" :total-records="3" class="pt-1"
                             template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink" />
                     </div>
                 </template>
